@@ -44,3 +44,4 @@ jobs:
       - name: Deploy to prod
         run: |
           npx cdk deploy --require-approval never
+          cat ./swagger-ui-${SWAGGER_UI_VERSION}/dist/index.html
