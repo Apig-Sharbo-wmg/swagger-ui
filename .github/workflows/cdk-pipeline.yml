@@ -30,10 +30,11 @@ jobs:
       - name: Prerequisite Installation
         run: |
           npm install
-      - name: Download swagger-ui
+      - name: Download and configure swagger-ui
         run: |
           curl -LO "https://github.com/swagger-api/swagger-ui/archive/refs/tags/v${SWAGGER_UI_VERSION}.zip"
           unzip "v${SWAGGER_UI_VERSION}.zip"
+          sed -i 's|\(url: "\)https://.\+json|\1custom-swagger.json|' ./swagger-ui-${SWAGGER_UI_VERSION}/dist/index.html
       - name: CDK synth
         run: |
           npx cdk synth
