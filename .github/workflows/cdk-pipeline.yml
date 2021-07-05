@@ -10,7 +10,6 @@ env:
 jobs:
   main:
     name: Deploy to prod
-    if: github.ref == 'refs/heads/main'
     # This job runs on Linux
     runs-on: ubuntu-latest
     steps:
