@@ -14,23 +14,6 @@ export class CdkSwaggerUiStack extends cdk.Stack {
     });
 
     const path = `./swagger-ui-${process.env.SWAGGER_UI_VERSION}/dist/`
-    const filePath = path + "index.html"
-    // Do replacement in file
-    fs.readFile(filePath, 'utf8', function (err,data) {
-      if (err) {
-        return console.log(err);
-      }
-
-      // Actual thing i want to do
-      const result = data.replace(/https:\/\/.\+.json/, 'custom-swagger.json');
-
-      // For testing with no changes
-      // const result = data
-
-      fs.writeFile(filePath, result, 'utf8', function (err) {
-        if (err) return console.log(err);
-      });
-    });
 
     new S3Deployment.BucketDeployment(this, 'Deployment', {
       sources: [S3Deployment.Source.asset(path)],
