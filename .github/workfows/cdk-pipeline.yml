@@ -1,0 +1,47 @@
+name: Lambda API CICD Workflow
+# This workflow is triggered on pushes to the repository branch master, develop.
+on: push
+
+# Initializes environment variables for the workflow
+env:
+  REGION: us-east-1 # Deployment Region
+  SWAGGER_UI_VERSION: ${{ secrets.SWAGGER_UI_VERSION }}
+
+jobs:
+  main:
+    name: Deploy to prod
+    if: github.ref == 'refs/heads/main'
+    # This job runs on Linux
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout code from git repo branch configured above, under folder $GITHUB_WORKSPACE.
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.WMG_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.WMG_AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.WMG_AWS_SESSION_TOKEN }} # if you have/need it
+          aws-region: ${{ env.REGION }}
+      # Installs CDK and other prerequisites
+      - name: Prerequisite Installation
+        run: |
+          npm install
+      - name: Download swagger-ui
+        run: |
+          curl -LO "https://github.com/swagger-api/swagger-ui/archive/refs/tags/v${SWAGGER_UI_VERSION}.zip"
+          unzip "v${SWAGGER_UI_VERSION}.zip"
+      - name: CDK synth
+        run: |
+          npx cdk synth
+      - name: CDK diff
+        run: |
+          npx cdk diff
+      # Deploy CDK application
+      - name: Deploy to prod
+        run: |
+          npx cdk deploy --require-approval never

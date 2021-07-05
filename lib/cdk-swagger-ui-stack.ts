@@ -13,7 +13,7 @@ export class CdkSwaggerUiStack extends cdk.Stack {
       publicReadAccess: true,
     });
 
-    const path = "./swagger-ui/dist/"
+    const path = `./swagger-ui-${process.env.SWAGGER_UI_VERSION}/dist/`
     const filePath = path + "index.html"
     // Do replacement in file
     fs.readFile(filePath, 'utf8', function (err,data) {
