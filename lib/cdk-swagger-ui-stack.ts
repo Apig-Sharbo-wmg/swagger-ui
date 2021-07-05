@@ -22,10 +22,10 @@ export class CdkSwaggerUiStack extends cdk.Stack {
       }
 
       // Actual thing i want to do
-      // const result = data.replace(/https:\/\/.\+.json/, 'my.json');
+      const result = data.replace(/https:\/\/.\+.json/, 'custom-swagger.json');
 
       // For testing with no changes
-      const result = data
+      // const result = data
 
       fs.writeFile(filePath, result, 'utf8', function (err) {
         if (err) return console.log(err);
